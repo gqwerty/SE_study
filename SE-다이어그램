@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>시스템 엔지니어링 개념 포함관계 - 정확한 관계도</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .diagram-container {
+      position: relative;
+      width: 100%;
+      height: 1200px;
+      margin: 30px 0;
+      background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 3px solid #dee2e6;
+    }
+
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 3px solid;
+      z-index: 1;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .circle:hover {
+      transform: scale(1.02);
+      z-index: 100;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .label {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #2c3e50;
+      border: 2px solid;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      z-index: 10;
+      text-shadow: none;
+    }
+
+    .tech-item {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      border: 1px solid;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 5;
+      text-shadow: none;
+      transition: all 0.2s ease;
+    }
+
+    .tech-item:hover {
+      transform: scale(1.1);
+      z-index: 15;
+    }
+
+    .tech-list {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: normal;
+      color: #2c3e50;
+      border: 1px solid;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 8;
+      text-shadow: none;
+      line-height: 1.4;
+    }
+
+    .tech-list:hover {
+      transform: scale(1.1);
+      z-index: 15;
+    }
+
+    .devops {
+      width: 650px;
+      height: 650px;
+      background: rgba(52, 152, 219, 0.1);
+      border-color: #3498db;
+      top: 150px;
+      left: 100px;
+    }
+
+    .devops-label {
+      top: 100px;
+      left: 350px;
+      border-color: #3498db;
+      color: #3498db;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .devops-list {
+      top: 230px;
+      left: 130px;
+      color: #3498db;
+      border-color: #3498db;
+      width: 100px;
+    }
+
+    .cloud {
+      width: 550px;
+      height: 550px;
+      background: rgba(155, 89, 182, 0.15);
+      border-color: #9b59b6;
+      top: 200px;
+      left: 450px;
+    }
+
+    .cloud-label {
+      top: 150px;
+      left: 650px;
+      border-color: #9b59b6;
+      color: #9b59b6;
+    }
+
+    .cloud-list {
+      top: 150px;
+      left: 780px;
+      color: #9b59b6;
+      border-color: #9b59b6;
+    }
+
+    .iac {
+      width: 180px;
+      height: 180px;
+      background: rgba(230, 126, 34, 0.2);
+      border-color: #e67e22;
+      top: 400px;
+      left: 620px;
+    }
+
+    .iac-label {
+      top: 350px;
+      left: 640px;
+      border-color: #e67e22;
+      color: #e67e22;
+      font-size: 12px;
+    }
+
+    .iac-list {
+      top: 420px;
+      left: 640px;
+      color: #e67e22;
+      border-color: #e67e22;
+      width: 100px;
+    }
+
+    .container-tech {
+      width: 200px;
+      height: 200px;
+      background: rgba(46, 204, 113, 0.15);
+      border-color: #2ecc71;
+      top: 350px;
+      left: 400px;
+    }
+
+    .container-label {
+      top: 310px;
+      left: 450px;
+      border-color: #2ecc71;
+      color: #2ecc71;
+    }
+
+    .container-list {
+      top: 380px;
+      left: 420px;
+      color: #2ecc71;
+      border-color: #2ecc71;
+      width: 100px;
+    }
+
+    .microservices {
+      width: 180px;
+      height: 180px;
+      background: rgba(241, 196, 15, 0.2);
+      border-color: #f1c40f;
+      top: 250px;
+      left: 680px;
+    }
+
+    .microservices-label {
+      top: 210px;
+      left: 710px;
+      border-color: #f1c40f;
+      color: #f1c40f;
+      font-size: 12px;
+    }
+
+    .microservices-list {
+      top: 300px;
+      left: 720px;
+      border-color: #f1c40f;
+      color: #f39c12;
+    }
+
+    .monitoring {
+      width: 170px;
+      height: 170px;
+      background: rgba(231, 76, 60, 0.15);
+      border-color: #e74c3c;
+      top: 480px;
+      left: 520px;
+    }
+
+    .monitoring-label {
+      top: 440px;
+      left: 550px;
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+
+    .monitor-list {
+      top: 510px;
+      left: 540px;
+      color: #e74c3c;
+      border-color: #e74c3c;
+      width: 100px;
+    }
+
+    .security {
+      width: 200px;
+      height: 200px;
+      background: rgba(52, 73, 94, 0.15);
+      border-color: #34495e;
+      top: 600px;
+      left: 350px;
+    }
+
+    .security-label {
+      top: 560px;
+      left: 400px;
+      border-color: #34495e;
+      color: #34495e;
+    }
+
+    .security-list {
+      top: 630px;
+      left: 380px;
+      border-color: #34495e;
+      color: #34495e;
+    }
+
+    .networking {
+      width: 180px;
+      height: 180px;
+      background: rgba(142, 68, 173, 0.2);
+      border-color: #8e44ad;
+      top: 550px;
+      left: 750px;
+    }
+
+    .networking-label {
+      top: 510px;
+      left: 790px;
+      border-color: #8e44ad;
+      color: #8e44ad;
+    }
+
+    .networking-list {
+      top: 580px;
+      left: 780px;
+      border-color: #8e44ad;
+      color: #8e44ad;
+    }
+
+    .cicd {
+      width: 160px;
+      height: 160px;
+      background: rgba(22, 160, 133, 0.2);
+      border-color: #16a085;
+      top: 200px;
+      left: 250px;
+    }
+
+    .cicd-label {
+      top: 160px;
+      left: 290px;
+      border-color: #16a085;
+      color: #16a085;
+    }
+
+    .cicd-list {
+      top: 230px;
+      left: 270px;
+      border-color: #16a085;
+      color: #16a085;
+    }
+
+    .virtualization {
+      width: 160px;
+      height: 160px;
+      background: rgba(192, 57, 43, 0.2);
+      border-color: #c0392b;
+      top: 800px;
+      left: 200px;
+    }
+
+    .virtualization-label {
+      top: 760px;
+      left: 230px;
+      border-color: #c0392b;
+      color: #c0392b;
+    }
+
+    .virtualization-list {
+      top: 830px;
+      left: 220px;
+      border-color: #c0392b;
+      color: #c0392b;
+    }
+
+    .backup {
+      width: 150px;
+      height: 150px;
+      background: rgba(127, 140, 141, 0.2);
+      border-color: #7f8c8d;
+      top: 850px;
+      left: 500px;
+    }
+
+    .backup-label {
+      top: 810px;
+      left: 510px;
+      border-color: #7f8c8d;
+      color: #7f8c8d;
+      font-size: 12px;
+    }
+
+    .backup-list {
+      top: 880px;
+      left: 520px;
+      border-color: #7f8c8d;
+      color: #7f8c8d;
+    }
+
+    .loadbalancing {
+      width: 140px;
+      height: 140px;
+      background: rgba(39, 174, 96, 0.2);
+      border-color: #27ae60;
+      top: 650px;
+      left: 620px;
+    }
+
+    .loadbalancing-label {
+      top: 610px;
+      left: 640px;
+      border-color: #27ae60;
+      color: #27ae60;
+      font-size: 12px;
+    }
+
+    .loadbalancing-list {
+      top: 680px;
+      left: 640px;
+      border-color: #27ae60;
+      color: #27ae60;
+    }
+
+    .api {
+      width: 150px;
+      height: 150px;
+      background: rgba(243, 156, 18, 0.2);
+      border-color: #f39c12;
+      top: 850px;
+      left: 750px;
+    }
+
+    .api-label {
+      top: 810px;
+      left: 780px;
+      border-color: #f39c12;
+      color: #f39c12;
+    }
+
+    .api-list {
+      top: 880px;
+      left: 770px;
+      border-color: #f39c12;
+      color: #f39c12;
+    }
+
+    .compliance {
+      width: 140px;
+      height: 140px;
+      background: rgba(44, 62, 80, 0.2);
+      border-color: #2c3e50;
+      top: 700px;
+      left: 150px;
+    }
+
+    .compliance-label {
+      top: 660px;
+      left: 170px;
+      border-color: #2c3e50;
+      color: #2c3e50;
+    }
+
+    .compliance-list {
+      top: 730px;
+      left: 170px;
+      border-color: #2c3e50;
+      color: #2c3e50;
+    }
+
+    .automation {
+      width: 150px;
+      height: 150px;
+      background: rgba(211, 84, 0, 0.2);
+      border-color: #d35400;
+      top: 450px;
+      left: 180px;
+    }
+
+    .automation-label {
+      top: 410px;
+      left: 210px;
+      border-color: #d35400;
+      color: #d35400;
+    }
+
+    .automation-list {
+      top: 480px;
+      left: 200px;
+      border-color: #d35400;
+      color: #d35400;
+    }
+
+    .data-mgmt {
+      width: 160px;
+      height: 160px;
+      background: rgba(26, 188, 156, 0.2);
+      border-color: #1abc9c;
+      top: 950px;
+      left: 400px;
+    }
+
+    .data-label {
+      top: 910px;
+      left: 430px;
+      border-color: #1abc9c;
+      color: #1abc9c;
+    }
+
+    .data-list {
+      top: 980px;
+      left: 420px;
+      border-color: #1abc9c;
+      color: #1abc9c;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #bdc3c7;
+      font-size: 12px;
+      width: 250px;
+    }
+
+    .legend-item {
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin-right: 10px;
+      border: 2px solid;
+    }
+
+    .explanation {
+      margin-top: 30px;
+      padding: 25px;
+      background: linear-gradient(135deg, #74b9ff, #0984e3);
+      border-radius: 15px;
+      color: white;
+    }
+
+    .explanation h3 {
+      margin-top: 0;
+      font-size: 1.5em;
+    }
+
+    .explanation ul {
+      margin: 15px 0;
+      padding-left: 25px;
+    }
+
+    .explanation li {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+
+    .key-concepts {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .key-concepts h4 {
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .concept-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .concept-item strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🔧 시스템 엔지니어링 개념 포함관계 - 완전판</h1>
+
+  <div class="diagram-container">
+    <!-- DevOps (큰 영역) -->
+    <div class="circle devops"></div>
+    <div class="label devops-label">DevOps</div>
+    <div class="tech-list devops-list">• Jenkins<br>• GitLab CI<br>• GitHub Actions</div>
+
+    <!-- 클라우드 컴퓨팅 - DevOps와 부분적으로 겹침 -->
+    <div class="circle cloud"></div>
+    <div class="label cloud-label">클라우드 컴퓨팅</div>
+    <div class="tech-list cloud-list">• AWS<br>• Azure<br>• GCP</div>
+
+    <!-- IaC - 클라우드 내부 -->
+    <div class="circle iac"></div>
+    <div class="label iac-label">IaC</div>
+    <div class="tech-list iac-list">• Terraform<br>• CloudFormation<br>• Pulumi</div>
+
+    <!-- 컨테이너화 - DevOps와 클라우드의 교집합 -->
+    <div class="circle container-tech"></div>
+    <div class="label container-label">컨테이너화</div>
+    <div class="tech-list container-list">• Docker<br>• Podman<br>• Kubernetes</div>
+
+    <!-- 마이크로서비스 - DevOps와 약간 겹침 -->
+    <div class="circle microservices"></div>
+    <div class="label microservices-label">마이크로서비스</div>
+    <div class="tech-list microservices-list">• Istio, Kong<br>• Kafka<br>• Consul</div>
+
+    <!-- 모니터링 - 세 영역이 만나는 지점 -->
+    <div class="circle monitoring"></div>
+    <div class="label monitoring-label">모니터링</div>
+    <div class="tech-list monitor-list">• Prometheus<br>• Grafana<br>• ELK Stack</div>
+
+    <!-- 보안 - 모든 영역과 관련 -->
+    <div class="circle security"></div>
+    <div class="label security-label">보안</div>
+    <div class="tech-list security-list">• OAuth, LDAP<br>• 방화벽, VPN<br>• Vault, SIEM</div>
+
+    <!-- 네트워킹 - 클라우드와 부분적으로 겹침 -->
+    <div class="circle networking"></div>
+    <div class="label networking-label">네트워킹</div>
+    <div class="tech-list networking-list">• NGINX<br>• HAProxy<br>• Route 53</div>
+
+    <!-- CI/CD -->
+    <div class="circle cicd"></div>
+    <div class="label cicd-label">CI/CD</div>
+    <div class="tech-list cicd-list">• ArgoCD<br>• Flux<br>• Spinnaker</div>
+
+    <!-- 가상화 -->
+    <div class="circle virtualization"></div>
+    <div class="label virtualization-label">가상화</div>
+    <div class="tech-list virtualization-list">• VMware<br>• Hyper-V<br>• KVM</div>
+
+    <!-- 백업/DR -->
+    <div class="circle backup"></div>
+    <div class="label backup-label">백업/DR</div>
+    <div class="tech-list backup-list">• Veeam<br>• Commvault<br>• AWS Backup</div>
+
+    <!-- 로드밸런싱 -->
+    <div class="circle loadbalancing"></div>
+    <div class="label loadbalancing-label">로드밸런싱</div>
+    <div class="tech-list loadbalancing-list">• ALB/NLB<br>• F5<br>• Citrix ADC</div>
+
+    <!-- API 관리 -->
+    <div class="circle api"></div>
+    <div class="label api-label">API 관리</div>
+    <div class="tech-list api-list">• Kong<br>• Apigee<br>• AWS API GW</div>
+
+    <!-- 컴플라이언스 -->
+    <div class="circle compliance"></div>
+    <div class="label compliance-label">컴플라이언스</div>
+    <div class="tech-list compliance-list">• GDPR<br>• ISO 27001<br>• SOC 2</div>
+
+    <!-- 자동화 -->
+    <div class="circle automation"></div>
+    <div class="label automation-label">자동화</div>
+    <div class="tech-list automation-list">• Ansible<br>• Puppet<br>• Chef</div>
+
+    <!-- 데이터 관리 -->
+    <div class="circle data-mgmt"></div>
+    <div class="label data-label">데이터 관리</div>
+    <div class="tech-list data-list">• PostgreSQL<br>• MongoDB<br>• Redis</div>
+
+    <!-- 범례 -->
+    <div class="legend">
+      <strong>포함관계 설명:</strong>
+      <div class="legend-item">
+        <div class="legend-color" style="background: rgba(52, 152, 219, 0.1); border-color: #3498db;"></div>
+        DevOps (문화/방법론)
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: rgba(155, 89, 182, 0.15); border-color: #9b59b6;"></div>
+        클라우드 컴퓨팅 (인프라 플랫폼)
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: rgba(46, 204, 113, 0.15); border-color: #2ecc71;"></div>
+        교집합 영역 (복수 도메인)
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: rgba(52, 73, 94, 0.15); border-color: #34495e;"></div>
+        독립/교차 개념
+      </div>
+    </div>
+  </div>
+
+  <div class="explanation">
+    <h3>🔍 포함관계 핵심 해석</h3>
+    <ul>
+      <li><strong>DevOps ∩ 클라우드</strong>: 두 영역은 부분적으로 겹치며, 컨테이너화와 모니터링이 교집합에 위치</li>
+      <li><strong>IaC ⊂ 클라우드</strong>: Infrastructure as Code는 클라우드 환경의 부분집합</li>
+      <li><strong>컨테이너화</strong>: DevOps와 클라우드 양쪽에서 핵심 기술 (ECS, EKS, AKS 등)</li>
+      <li><strong>모니터링</strong>: DevOps, 클라우드, 독립적 운영 모두에서 필수</li>
+      <li><strong>보안</strong>: 모든 영역을 관통하는 횡단 관심사(Cross-cutting concern)</li>
+      <li><strong>네트워킹</strong>: 클라우드와 온프레미스 양쪽에 걸쳐 있음</li>
+    </ul>
+
+    <div class="key-concepts">
+      <h4>💡 시스템 엔지니어가 알아야 할 추가 핵심 개념</h4>
+      <div class="concept-grid">
+        <div class="concept-item">
+          <strong>🔄 CI/CD</strong>
+          지속적 통합/배포 파이프라인 구축
+        </div>
+        <div class="concept-item">
+          <strong>💾 가상화</strong>
+          하이퍼바이저와 VM 관리
+        </div>
+        <div class="concept-item">
+          <strong>🛡️ 백업/DR</strong>
+          재해복구 계획과 데이터 보호
+        </div>
+        <div class="concept-item">
+          <strong>⚖️ 로드밸런싱</strong>
+          트래픽 분산과 고가용성
+        </div>
+        <div class="concept-item">
+          <strong>🔌 API 관리</strong>
+          API 게이트웨이와 버전 관리
+        </div>
+        <div class="concept-item">
+          <strong>📋 컴플라이언스</strong>
+          규정 준수와 감사 대응
+        </div>
+      </div>
+    </div>
+
+    <p><strong>🎯 실무 적용 순서:</strong> DevOps 문화 이해 → 클라우드 기본기 → 컨테이너/오케스트레이션 →
+      모니터링/보안 → IaC/자동화 → 고급 주제(마이크로서비스, 컴플라이언스)</p>
+  </div>
+</div>
+
+<script>
+  // 마우스 오버 시 관련 영역 하이라이트
+  document.querySelectorAll('.circle, .tech-list').forEach(element => {
+    element.addEventListener('mouseenter', function() {
+      this.style.zIndex = '1000';
+      this.style.filter = 'brightness(1.1)';
+    });
+
+    element.addEventListener('mouseleave', function() {
+      this.style.zIndex = this.classList.contains('circle') ? '1' : '8';
+      this.style.filter = 'brightness(1)';
+    });
+  });
+
+  // 클릭 시 설명 표시 (옵션)
+  document.querySelectorAll('.circle').forEach(circle => {
+    circle.addEventListener('click', function() {
+      const label = this.classList[1];
+      console.log(`${label} 영역이 클릭되었습니다.`);
+    });
+  });
+</script>
+</body>
+</html>
